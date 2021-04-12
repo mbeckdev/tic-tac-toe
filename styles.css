@@ -8,3 +8,7 @@ body {
   background-color: hsl(235, 10%, 20%);
   color: hsl(235, 10%, 90%);
 }
+
+#gameboard-area {
+  background-color: blue;
+}
