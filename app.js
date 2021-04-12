@@ -1,5 +1,11 @@
 'use strict';
 
+// Your main goal here is to have as little global code as possible.
+// Try tucking everything away inside of a module or factory.
+// Rule of thumb: if you only ever need ONE of something // (gameBoard, displayController), use a module.
+// If you need multiples  of something (players!), create them with factories.
+// https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/tic-tac-toe
+
 //make the gameboard an array
 // const squares = [];
 // for (let i = 0; i < 3; i++) {
@@ -23,7 +29,10 @@ const Person = (aname) => {
   function sayName() {
     return aname;
   }
-  // const
+  // let sayAName = function () {
+  //   return aname;
+  // };
+
   return { sayName };
 };
 
@@ -31,13 +40,6 @@ const player = Person('player');
 const computer = Person('computer');
 
 //an object to control the flow of the game - we only need this once - make it a module
-// let gameFlow = {
-//   whoseTurn: 0, // 0 or 1
-//   scorePlayer: 0,
-//   scoreComputer: 0,
-//   someoneWon: false, //true when someone got 3 in a row
-//   allowPlayAgainBtn: false, // should turn true when someone won
-// };
 
 const gameFlow = (function () {
   let whoseTurn = 0;
@@ -54,3 +56,25 @@ const gameFlow = (function () {
     allowPlayAgainBtn,
   };
 })();
+
+//module
+const DisplayController = (function () {
+  function drawCells() {
+    console.log('drawing cells');
+    const gameboardArea = document.getElementById('gameboard-area');
+    const cell = document.createElement('div');
+    cell.classList.add('cell');
+    gameboardArea.appendChild(cell);
+  }
+  // let drawXs
+  // let drawOs
+  return { drawCells };
+})();
+let myDisplayController = DisplayController; //i just need to make this once
+
+function lol() {
+  const gameboardArea = document.getElementById('gameboard-area');
+  const cell = document.createElement('div');
+  cell.classList.add('cell');
+  gameboardArea.appendChild(cell);
+}
