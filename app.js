@@ -24,23 +24,20 @@ const gameboard = (function () {
 })();
 
 //players are stored as objects -- use factory (is used multiple times)
-const Person = (aname) => {
+const Person = (aname, aMarker) => {
   const _name = aname;
   function sayName() {
     return aname;
   }
-  // let sayAName = function () {
-  //   return aname;
-  // };
+  let marker = aMarker;
 
-  return { sayName };
+  return { sayName, marker };
 };
 
-const player = Person('player');
-const computer = Person('computer');
+const player = Person('player', 'X');
+const computer = Person('computer', 'O');
 
 //an object to control the flow of the game - we only need this once - make it a module
-
 const gameFlow = (function () {
   let whoseTurn = 0;
   let currentMark = 'X'; //will change when whoseturn changes.
@@ -96,6 +93,7 @@ const DisplayController = (function () {
       cell.addEventListener('click', gameFlow.checkIfTaken);
     }
   }
+  drawCells();
 
   function placeMark(e) {
     console.log('placing mark');
@@ -108,7 +106,6 @@ const DisplayController = (function () {
   return { drawCells, placeMark };
 })();
 let myDisplayController = DisplayController; //i just need to make this once
-myDisplayController.drawCells();
 
 function lol() {
   const gameboardArea = document.getElementById('gameboard-area');
