@@ -43,6 +43,7 @@ const computer = Person('computer');
 
 const gameFlow = (function () {
   let whoseTurn = 0;
+  let currentMark = 'X'; //will change when whoseturn changes.
   let scorePlayer = 0;
   let scoreComputer = 0;
   let someoneWon = false;
@@ -50,6 +51,7 @@ const gameFlow = (function () {
 
   return {
     whoseTurn,
+    currentMark,
     scorePlayer,
     scoreComputer,
     someoneWon,
@@ -62,15 +64,37 @@ const DisplayController = (function () {
   function drawCells() {
     console.log('drawing cells');
     const gameboardArea = document.getElementById('gameboard-area');
-    const cell = document.createElement('div');
-    cell.classList.add('cell');
-    gameboardArea.appendChild(cell);
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.dataset.id = i;
+      gameboardArea.appendChild(cell);
+
+      //for now, add Xs and Os, to be taken out when we have click to add X or Os
+      let aLetter = '';
+      if (Math.floor(Math.random() * 2) == 0) {
+        aLetter = 'X';
+      } else {
+        aLetter = 'O';
+      }
+      let aLetterNode = document.createTextNode(aLetter);
+      cell.appendChild(aLetterNode);
+
+      cell.addEventListener('click', placeMark);
+    }
   }
-  // let drawXs
-  // let drawOs
-  return { drawCells };
+
+  function placeMark(e) {
+    console.log('placing mark');
+    let currentMarker = gameFlow.currentMark;
+    console.log(currentMarker);
+    console.log(e.target.dataset.id);
+  }
+
+  return { drawCells, placeMark };
 })();
 let myDisplayController = DisplayController; //i just need to make this once
+myDisplayController.drawCells();
 
 function lol() {
   const gameboardArea = document.getElementById('gameboard-area');
