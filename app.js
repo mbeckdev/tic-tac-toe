@@ -49,6 +49,18 @@ const gameFlow = (function () {
   let someoneWon = false;
   let allowPlayAgainBtn = false;
 
+  function checkIfTaken(e) {
+    console.log('checking');
+    let thisDiv = e.target;
+    console.log('thisDiv.textContent = ' + thisDiv.textContent);
+
+    if (thisDiv.textContent == '') {
+      myDisplayController.placeMark(e);
+    } else {
+      // there's a mark here already! Do nothing.
+    }
+  }
+
   return {
     whoseTurn,
     currentMark,
@@ -56,6 +68,7 @@ const gameFlow = (function () {
     scoreComputer,
     someoneWon,
     allowPlayAgainBtn,
+    checkIfTaken,
   };
 })();
 
@@ -70,25 +83,26 @@ const DisplayController = (function () {
       cell.dataset.id = i;
       gameboardArea.appendChild(cell);
 
-      //for now, add Xs and Os, to be taken out when we have click to add X or Os
-      let aLetter = '';
-      if (Math.floor(Math.random() * 2) == 0) {
-        aLetter = 'X';
-      } else {
-        aLetter = 'O';
-      }
-      let aLetterNode = document.createTextNode(aLetter);
-      cell.appendChild(aLetterNode);
+      // //for now, add Xs and Os, to be taken out when we have click to add X or Os
+      // let aLetter = '';
+      // if (Math.floor(Math.random() * 2) == 0) {
+      //   aLetter = 'X';
+      // } else {
+      //   aLetter = 'O';
+      // }
+      // let aLetterNode = document.createTextNode(aLetter);
+      // cell.appendChild(aLetterNode);
 
-      cell.addEventListener('click', placeMark);
+      cell.addEventListener('click', gameFlow.checkIfTaken);
     }
   }
 
   function placeMark(e) {
     console.log('placing mark');
+
     let currentMarker = gameFlow.currentMark;
-    console.log(currentMarker);
-    console.log(e.target.dataset.id);
+    let thisDiv = e.target;
+    thisDiv.textContent = currentMarker;
   }
 
   return { drawCells, placeMark };

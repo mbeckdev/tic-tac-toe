@@ -21,6 +21,7 @@ body {
   /* height: 500px; */
   /* background-color: blue; */
 }
+
 #board-wrapper {
   /* width: 300px; */
   display: flex;
@@ -39,4 +40,6 @@ body {
   border-radius: 5px;
 
   font-size: xx-large;
+
+  cursor: pointer;
 }
