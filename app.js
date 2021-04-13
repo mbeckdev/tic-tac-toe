@@ -40,7 +40,7 @@ const computer = Person('computer', 'O');
 // an object to control the flow of the game
 // - we only need this once - make it a module pattern
 const gameFlow = (function () {
-  let whoseTurn = 0;
+  let whoseTurn = 'player';
   let currentMark = 'X'; //will change when whoseturn changes.
   let scorePlayer = 0;
   let scoreComputer = 0;
@@ -53,10 +53,60 @@ const gameFlow = (function () {
     console.log('thisDiv.textContent = ' + thisDiv.textContent);
 
     if (thisDiv.textContent == '') {
-      myDisplayController.placeMark(e);
+      displayController.placeMark(e);
+      switchWhoseTurn();
     } else {
       // there's a mark here already! Do nothing.
     }
+  }
+
+  function switchWhoseTurn() {
+    if (gameFlow.whoseTurn == 'player') {
+      //after player's turn:
+      gameFlow.whoseTurn = 'computer';
+      gameFlow.currentMark = computer.marker;
+      console.log('currentMark = ' + currentMark);
+      _computerTakesTurn();
+      switchWhoseTurn(); // should go to the else stuff below
+    } else {
+      gameFlow.whoseTurn = 'player';
+      gameFlow.currentMark = player.marker;
+    }
+  }
+
+  let gameboardStatus = [];
+  function getGameboardStatus() {
+    gameboardStatus = [];
+    document.querySelectorAll('.cell').forEach((div) => {
+      gameboardStatus.push(div.textContent);
+    });
+  }
+
+  function _computerTakesTurn() {
+    // placeMark();
+    // check possible places to put mark
+
+    getGameboardStatus();
+
+    //create an array of spaces left, eg. ['0','2','8']
+    const spacesLeft = [];
+    let k = 0;
+    gameboardStatus.forEach((box) => {
+      if (box == '') {
+        //it's open, add it to the spacesLeft
+        spacesLeft.push(k);
+      }
+      k++;
+    });
+
+    // randomly chose one of those places
+    let chosenId = 0;
+    let randomSpotInArray = Math.floor(Math.random() * spacesLeft.length);
+    chosenId = spacesLeft[randomSpotInArray];
+    // place mark
+
+    displayController.placeMark(chosenId);
+    console.log('end');
   }
 
   return {
@@ -71,7 +121,7 @@ const gameFlow = (function () {
 })();
 
 //module
-const DisplayController = (function () {
+const displayController = (function () {
   function drawCells() {
     console.log('drawing cells');
     const gameboardArea = document.getElementById('gameboard-area');
@@ -81,16 +131,6 @@ const DisplayController = (function () {
       cell.dataset.id = i;
       gameboardArea.appendChild(cell);
 
-      // //for now, add Xs and Os, to be taken out when we have click to add X or Os
-      // let aLetter = '';
-      // if (Math.floor(Math.random() * 2) == 0) {
-      //   aLetter = 'X';
-      // } else {
-      //   aLetter = 'O';
-      // }
-      // let aLetterNode = document.createTextNode(aLetter);
-      // cell.appendChild(aLetterNode);
-
       cell.addEventListener('click', gameFlow.checkIfTaken);
     }
   }
@@ -98,19 +138,26 @@ const DisplayController = (function () {
 
   function placeMark(e) {
     console.log('placing mark');
-
     let currentMarker = gameFlow.currentMark;
-    let thisDiv = e.target;
+    let thisDiv = '';
+    if (gameFlow.whoseTurn == 'player') {
+      thisDiv = e.target;
+      // ^ based on user clicking a certain div
+      // e here is a PointerEvent
+    } else {
+      thisDiv = document.querySelector(`[data-id=${CSS.escape(e)}]`);
+      // ^ based on some math that determines the number 'e'
+    }
+
     thisDiv.textContent = currentMarker;
   }
 
   return { drawCells, placeMark };
 })();
-let myDisplayController = DisplayController; //i just need to make this once
 
-function lol() {
-  const gameboardArea = document.getElementById('gameboard-area');
-  const cell = document.createElement('div');
-  cell.classList.add('cell');
-  gameboardArea.appendChild(cell);
-}
+// function lol() {
+//   const gameboardArea = document.getElementById('gameboard-area');
+//   const cell = document.createElement('div');
+//   cell.classList.add('cell');
+//   gameboardArea.appendChild(cell);
+// }
