@@ -23,11 +23,11 @@ const gameboard = (function () {
   return { squares };
 })();
 
-//players are stored as objects -- use factory (is used multiple times)
-const Person = (aname, aMarker) => {
-  const _name = aname;
+//players are stored as objects -- use factory function (it's used multiple times)
+const Person = (aName, aMarker) => {
+  const _name = aName;
   function sayName() {
-    return aname;
+    return _name;
   }
   let marker = aMarker;
 
@@ -37,7 +37,8 @@ const Person = (aname, aMarker) => {
 const player = Person('player', 'X');
 const computer = Person('computer', 'O');
 
-//an object to control the flow of the game - we only need this once - make it a module
+// an object to control the flow of the game
+// - we only need this once - make it a module pattern
 const gameFlow = (function () {
   let whoseTurn = 0;
   let currentMark = 'X'; //will change when whoseturn changes.
