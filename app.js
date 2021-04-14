@@ -65,9 +65,11 @@ const gameFlow = (function () {
       //after player's turn:
       gameFlow.whoseTurn = 'computer';
       gameFlow.currentMark = computer.marker;
-      console.log('currentMark = ' + currentMark);
-      _computerTakesTurn();
-      switchWhoseTurn(); // should go to the else stuff below
+      console.log('currentMark = ' + gameFlow.currentMark);
+      window.setTimeout(function () {
+        _computerTakesTurn();
+        switchWhoseTurn(); // should go to the else stuff below
+      }, 500);
     } else {
       gameFlow.whoseTurn = 'player';
       gameFlow.currentMark = player.marker;
@@ -150,6 +152,8 @@ const displayController = (function () {
     }
 
     thisDiv.textContent = currentMarker;
+
+    thisDiv.style.transform = 'rotate(180deg)';
   }
 
   return { drawCells, placeMark };
