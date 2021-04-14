@@ -20,7 +20,18 @@
 const gameboard = (function () {
   const squares = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   console.log('made squares');
-  return { squares };
+
+  let gameboardStatus = [];
+  function getGameboardStatus() {
+    gameboardStatus = [];
+    document.querySelectorAll('.cell').forEach((div) => {
+      gameboardStatus.push(div.textContent);
+    });
+    console.log('gameboardStatus = ' + gameboardStatus);
+    console.log('gameboard.gameboardStatus = ' + gameboard.gameboardStatus);
+    gameboard.gameboardStatus = gameboardStatus;
+  }
+  return { squares, getGameboardStatus, gameboardStatus };
 })();
 
 //players are stored as objects -- use factory function (it's used multiple times)
@@ -54,7 +65,10 @@ const gameFlow = (function () {
 
     if (thisDiv.textContent == '') {
       displayController.placeMark(e);
-      switchWhoseTurn();
+      gameFlow.checkGameOver();
+      if (!gameFlow.someoneWon) {
+        switchWhoseTurn();
+      }
     } else {
       // there's a mark here already! Do nothing.
     }
@@ -68,7 +82,10 @@ const gameFlow = (function () {
       console.log('currentMark = ' + gameFlow.currentMark);
       window.setTimeout(function () {
         _computerTakesTurn();
-        switchWhoseTurn(); // should go to the else stuff below
+        gameFlow.checkGameOver();
+        if (!gameFlow.someoneWon) {
+          switchWhoseTurn(); // should go to the else stuff below
+        }
       }, 500);
     } else {
       gameFlow.whoseTurn = 'player';
@@ -76,24 +93,74 @@ const gameFlow = (function () {
     }
   }
 
-  let gameboardStatus = [];
-  function getGameboardStatus() {
-    gameboardStatus = [];
-    document.querySelectorAll('.cell').forEach((div) => {
-      gameboardStatus.push(div.textContent);
-    });
+  function checkGameOver() {
+    gameboard.getGameboardStatus();
+    // gameboard.gameboardStatus;
+
+    const winningIds = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    for (let i = 0; i < winningIds.length; i++) {
+      let lilArray = winningIds[i];
+      console.log(lilArray);
+
+      // lilArray[0] //3
+      // gameboard.gameboardStatus[lilArray[0]] // ''  or 'X' or 'O'
+      let spotA = gameboard.gameboardStatus[lilArray[0]]; // ''  or 'X' or 'O'
+      let spotB = gameboard.gameboardStatus[lilArray[1]]; // ''  or 'X' or 'O'
+      let spotC = gameboard.gameboardStatus[lilArray[2]]; // ''  or 'X' or 'O'
+
+      //check if player won
+      if (
+        spotA == player.marker &&
+        spotB == player.marker &&
+        spotC == player.marker
+      ) {
+        //yes player has won
+        console.log('Player has won!!!!');
+        gameFlow.winHappened(player);
+        break;
+      }
+
+      //check if computer won
+      if (
+        spotA == computer.marker &&
+        spotB == computer.marker &&
+        spotC == computer.marker
+      ) {
+        //yes computer has won
+        console.log('computer has won!!!!');
+        gameFlow.winHappened(computer);
+        break;
+      }
+    }
   }
+  // let gameboardStatus = [];
+  // function getGameboardStatus() {
+  //   gameboardStatus = [];
+  //   document.querySelectorAll('.cell').forEach((div) => {
+  //     gameboardStatus.push(div.textContent);
+  //   });
+  // }
 
   function _computerTakesTurn() {
     // placeMark();
     // check possible places to put mark
 
-    getGameboardStatus();
+    gameboard.getGameboardStatus();
 
     //create an array of spaces left, eg. ['0','2','8']
     const spacesLeft = [];
     let k = 0;
-    gameboardStatus.forEach((box) => {
+    gameboard.gameboardStatus.forEach((box) => {
       if (box == '') {
         //it's open, add it to the spacesLeft
         spacesLeft.push(k);
@@ -111,6 +178,11 @@ const gameFlow = (function () {
     console.log('end');
   }
 
+  function winHappened(whichPlayer) {
+    console.log('win happened to ' + whichPlayer.sayName());
+    gameFlow.someoneWon = true;
+  }
+
   return {
     whoseTurn,
     currentMark,
@@ -119,6 +191,8 @@ const gameFlow = (function () {
     someoneWon,
     allowPlayAgainBtn,
     checkIfTaken,
+    checkGameOver,
+    winHappened,
   };
 })();
 
