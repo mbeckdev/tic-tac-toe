@@ -55,7 +55,7 @@ const gameFlow = (function () {
   let currentMark = 'X'; //will change when whoseturn changes.
   let scorePlayer = 0;
   let scoreComputer = 0;
-  let someoneWon = false;
+  let endOfGame = false;
   let allowPlayAgainBtn = false;
 
   function checkIfTaken(e) {
@@ -66,7 +66,7 @@ const gameFlow = (function () {
     if (thisDiv.textContent == '') {
       displayController.placeMark(e);
       gameFlow.checkGameOver();
-      if (!gameFlow.someoneWon) {
+      if (!gameFlow.endOfGame) {
         switchWhoseTurn();
       }
     } else {
@@ -83,7 +83,7 @@ const gameFlow = (function () {
       window.setTimeout(function () {
         _computerTakesTurn();
         gameFlow.checkGameOver();
-        if (!gameFlow.someoneWon) {
+        if (!gameFlow.endOfGame) {
           switchWhoseTurn(); // should go to the else stuff below
         }
       }, 500);
@@ -107,6 +107,13 @@ const gameFlow = (function () {
       [0, 4, 8],
       [2, 4, 6],
     ];
+
+    let round = 0;
+    gameboard.gameboardStatus.forEach((thisCell) => {
+      if (!(thisCell == '')) {
+        round++;
+      }
+    });
 
     for (let i = 0; i < winningIds.length; i++) {
       let lilArray = winningIds[i];
@@ -140,6 +147,11 @@ const gameFlow = (function () {
         console.log('computer has won!!!!');
         gameFlow.winHappened(computer);
         break;
+      }
+
+      if (i == winningIds.length - 1 && round >= 9) {
+        //tie game
+        gameFlow.tieHappened();
       }
     }
   }
@@ -180,19 +192,23 @@ const gameFlow = (function () {
 
   function winHappened(whichPlayer) {
     console.log('win happened to ' + whichPlayer.sayName());
-    gameFlow.someoneWon = true;
+    gameFlow.endOfGame = true;
   }
-
+  function tieHappened() {
+    console.log('Tie Game');
+    gameFlow.endOfGame = true;
+  }
   return {
     whoseTurn,
     currentMark,
     scorePlayer,
     scoreComputer,
-    someoneWon,
+    endOfGame,
     allowPlayAgainBtn,
     checkIfTaken,
     checkGameOver,
     winHappened,
+    tieHappened,
   };
 })();
 
