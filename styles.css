@@ -9,6 +9,17 @@ body {
   color: hsl(235, 10%, 90%);
 }
 
+#board-wrapper {
+  /* width: 300px; */
+  display: flex;
+  justify-content: center;
+  /* background-color: red; */
+}
+
+#btn-wrapper {
+  height: 30px;
+}
+
 #gameboard-area {
   display: grid;
   grid-template-rows: repeat(3, 80px);
@@ -22,14 +33,7 @@ body {
   /* background-color: blue; */
 }
 
-#board-wrapper {
-  /* width: 300px; */
-  display: flex;
-  justify-content: center;
-  /* background-color: red; */
-}
-
-#start-game {
+#start-reset-btn {
   width: 3rem;
 }
 
@@ -60,4 +64,8 @@ body {
   cursor: pointer;
 
   transition-duration: 0.5s;
+}
+
+.hidden {
+  display: none;
 }

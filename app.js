@@ -53,24 +53,27 @@ const computer = Person('computer', 'O');
 const gameFlow = (function () {
   let whoseTurn = 'player';
   let currentMark = 'X'; //will change when whoseturn changes.
-  let scorePlayer = 0;
-  let scoreComputer = 0;
+  // let scorePlayer = 0;
+  // let scoreComputer = 0;
   let endOfGame = false;
   let allowPlayAgainBtn = false;
 
   function checkIfTaken(e) {
     console.log('checking');
+
     let thisDiv = e.target;
     console.log('thisDiv.textContent = ' + thisDiv.textContent);
 
-    if (thisDiv.textContent == '') {
-      displayController.placeMark(e);
-      gameFlow.checkGameOver();
-      if (!gameFlow.endOfGame) {
-        switchWhoseTurn();
+    if (!gameFlow.endOfGame) {
+      if (thisDiv.textContent == '') {
+        displayController.placeMark(e);
+        gameFlow.checkGameOver();
+        if (!gameFlow.endOfGame) {
+          switchWhoseTurn();
+        }
+      } else {
+        // there's a mark here already! Do nothing.
       }
-    } else {
-      // there's a mark here already! Do nothing.
     }
   }
 
@@ -193,16 +196,18 @@ const gameFlow = (function () {
   function winHappened(whichPlayer) {
     console.log('win happened to ' + whichPlayer.sayName());
     gameFlow.endOfGame = true;
+    displayController.changeBtnText();
   }
   function tieHappened() {
     console.log('Tie Game');
     gameFlow.endOfGame = true;
+    displayController.changeBtnText();
   }
   return {
     whoseTurn,
     currentMark,
-    scorePlayer,
-    scoreComputer,
+    // scorePlayer,
+    // scoreComputer,
     endOfGame,
     allowPlayAgainBtn,
     checkIfTaken,
@@ -214,19 +219,48 @@ const gameFlow = (function () {
 
 //module
 const displayController = (function () {
+  const _gameboardArea = document.getElementById('gameboard-area');
+
   function drawCells() {
     console.log('drawing cells');
-    const gameboardArea = document.getElementById('gameboard-area');
+
     for (let i = 0; i < 9; i++) {
       const cell = document.createElement('div');
       cell.classList.add('cell');
       cell.dataset.id = i;
-      gameboardArea.appendChild(cell);
+      _gameboardArea.appendChild(cell);
 
       cell.addEventListener('click', gameFlow.checkIfTaken);
     }
   }
-  drawCells();
+
+  const _startResetBtn = document.getElementById('start-reset-btn');
+  function initialStart() {
+    drawCells();
+    _startResetBtn.addEventListener('click', resetGame);
+  }
+  initialStart();
+
+  function resetGame() {
+    resetCellValues();
+    resetGameValues();
+    displayController.changeBtnText();
+  }
+  function resetCellValues() {
+    let cells = Array.from(_gameboardArea.getElementsByClassName('cell'));
+    cells.forEach((cell) => {
+      cell.textContent = '';
+      cell.style.setProperty('transform', 'initial');
+    });
+    console.log(cells);
+  }
+  function resetGameValues() {
+    // stuff
+    gameFlow.whoseTurn = 'player';
+    gameFlow.currentMark = 'X'; //will change when whoseturn changes.
+    gameFlow.endOfGame = false;
+    gameFlow.allowPlayAgainBtn = false;
+  }
 
   function placeMark(e) {
     console.log('placing mark');
@@ -246,7 +280,16 @@ const displayController = (function () {
     thisDiv.style.transform = 'rotate(180deg)';
   }
 
-  return { drawCells, placeMark };
+  function changeBtnText() {
+    if (gameFlow.endOfGame) {
+      _startResetBtn.classList.remove('hidden');
+      _startResetBtn.textContent = 'Play Again';
+    } else {
+      _startResetBtn.classList.add('hidden');
+    }
+  }
+
+  return { drawCells, placeMark, changeBtnText };
 })();
 
 // function lol() {
