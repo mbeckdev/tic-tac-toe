@@ -9,6 +9,16 @@ body {
   color: hsl(235, 10%, 90%);
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+}
+
 #board-wrapper {
   /* width: 300px; */
   display: flex;
@@ -34,7 +44,7 @@ body {
 }
 
 #start-reset-btn {
-  width: 3rem;
+  width: 7rem;
 }
 
 #top-wrapper {
@@ -46,6 +56,7 @@ body {
 #whose-turn {
   display: flex;
   justify-content: center;
+  padding: 10px;
 }
 
 .cell {

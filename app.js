@@ -36,22 +36,37 @@ const gameboard = (function () {
 
 //players are stored as objects -- use factory function (it's used multiple times)
 const Person = (aName, aMarker) => {
-  const _name = aName;
+  let _name = aName;
+
   function sayName() {
     return _name;
   }
   let marker = aMarker;
 
-  return { sayName, marker };
+  function updateName1() {
+    _name = document.getElementById('player1').value;
+  }
+  function updateName2() {
+    _name = document.getElementById('player2').value;
+  }
+
+  return { sayName, marker, updateName1, updateName2 };
 };
 
-const player = Person('player', 'X');
-const computer = Person('computer', 'O');
+const player1 = Person('player1', 'X');
+const player2 = Person('player2', 'O');
+
+document
+  .getElementById('player1')
+  .addEventListener('change', player1.updateName1);
+document
+  .getElementById('player2')
+  .addEventListener('change', player2.updateName2);
 
 // an object to control the flow of the game
 // - we only need this once - make it a module pattern
 const gameFlow = (function () {
-  let whoseTurn = 'player';
+  let whoseTurn = 'player1';
   let currentMark = 'X'; //will change when whoseturn changes.
   // let scorePlayer = 0;
   // let scoreComputer = 0;
@@ -78,11 +93,12 @@ const gameFlow = (function () {
   }
 
   function switchWhoseTurn() {
-    if (gameFlow.whoseTurn == 'player') {
+    if (gameFlow.whoseTurn == 'player1') {
       //after player's turn:
-      gameFlow.whoseTurn = 'computer';
-      document.getElementById('whose-turn').textContent = "Computer's turn";
-      gameFlow.currentMark = computer.marker;
+      gameFlow.whoseTurn = 'player2';
+      document.getElementById('whose-turn').textContent =
+        player2.sayName() + "'s turn";
+      gameFlow.currentMark = player2.marker;
       console.log('currentMark = ' + gameFlow.currentMark);
       window.setTimeout(function () {
         _computerTakesTurn();
@@ -92,9 +108,10 @@ const gameFlow = (function () {
         }
       }, 500);
     } else {
-      gameFlow.whoseTurn = 'player';
-      document.getElementById('whose-turn').textContent = "Player's turn";
-      gameFlow.currentMark = player.marker;
+      gameFlow.whoseTurn = 'player1';
+      document.getElementById('whose-turn').textContent =
+        player1.sayName() + "'s turn";
+      gameFlow.currentMark = player1.marker;
     }
   }
 
@@ -132,25 +149,25 @@ const gameFlow = (function () {
 
       //check if player won
       if (
-        spotA == player.marker &&
-        spotB == player.marker &&
-        spotC == player.marker
+        spotA == player1.marker &&
+        spotB == player1.marker &&
+        spotC == player1.marker
       ) {
         //yes player has won
-        console.log('Player has won!!!!');
-        gameFlow.winHappened(player);
+        console.log('Player1 has won!!!!');
+        gameFlow.winHappened(player1);
         break;
       }
 
       //check if computer won
       if (
-        spotA == computer.marker &&
-        spotB == computer.marker &&
-        spotC == computer.marker
+        spotA == player2.marker &&
+        spotB == player2.marker &&
+        spotC == player2.marker
       ) {
-        //yes computer has won
-        console.log('computer has won!!!!');
-        gameFlow.winHappened(computer);
+        //yes player2 has won
+        console.log('player2 has won!!!!');
+        gameFlow.winHappened(player2);
         break;
       }
 
@@ -241,17 +258,33 @@ const displayController = (function () {
   }
 
   const _startResetBtn = document.getElementById('start-reset-btn');
+
   function initialStart() {
     drawCells();
     _startResetBtn.addEventListener('click', resetGame);
+    // document.getElementById('player1').value = 'Happy Penguin';
+    // document.getElementById('player2').value = 'Crafty Raccoon';
+    // player1.updateName1();
+    // player2.updateName2();
   }
   initialStart();
 
   function resetGame() {
+    if (document.getElementById('player1').value == '') {
+      document.getElementById('player1').value = 'Happy Penguin';
+      player1.updateName1();
+    }
+    if (document.getElementById('player2').value == '') {
+      document.getElementById('player2').value = document.getElementById(
+        'player2'
+      ).placeholder;
+      player2.updateName2();
+    }
     resetCellValues();
     resetGameValues();
     displayController.changeBtnText();
-    document.getElementById('whose-turn').textContent = "Player's turn";
+    document.getElementById('whose-turn').textContent =
+      player1.sayName() + "'s turn";
   }
   function resetCellValues() {
     let cells = Array.from(_gameboardArea.getElementsByClassName('cell'));
@@ -263,7 +296,7 @@ const displayController = (function () {
   }
   function resetGameValues() {
     // stuff
-    gameFlow.whoseTurn = 'player';
+    gameFlow.whoseTurn = 'player1';
     gameFlow.currentMark = 'X'; //will change when whoseturn changes.
     gameFlow.endOfGame = false;
     gameFlow.allowPlayAgainBtn = false;
@@ -273,7 +306,7 @@ const displayController = (function () {
     console.log('placing mark');
     let currentMarker = gameFlow.currentMark;
     let thisDiv = '';
-    if (gameFlow.whoseTurn == 'player') {
+    if (gameFlow.whoseTurn == 'player1') {
       thisDiv = e.target;
       // ^ based on user clicking a certain div
       // e here is a PointerEvent
