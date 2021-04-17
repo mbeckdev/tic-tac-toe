@@ -81,6 +81,7 @@ const gameFlow = (function () {
     if (gameFlow.whoseTurn == 'player') {
       //after player's turn:
       gameFlow.whoseTurn = 'computer';
+      document.getElementById('whose-turn').textContent = "Computer's turn";
       gameFlow.currentMark = computer.marker;
       console.log('currentMark = ' + gameFlow.currentMark);
       window.setTimeout(function () {
@@ -92,6 +93,7 @@ const gameFlow = (function () {
       }, 500);
     } else {
       gameFlow.whoseTurn = 'player';
+      document.getElementById('whose-turn').textContent = "Player's turn";
       gameFlow.currentMark = player.marker;
     }
   }
@@ -195,11 +197,15 @@ const gameFlow = (function () {
 
   function winHappened(whichPlayer) {
     console.log('win happened to ' + whichPlayer.sayName());
+    document.getElementById('whose-turn').textContent =
+      whichPlayer.sayName() + ' won!';
+
     gameFlow.endOfGame = true;
     displayController.changeBtnText();
   }
   function tieHappened() {
     console.log('Tie Game');
+    document.getElementById('whose-turn').textContent = 'Tie Game';
     gameFlow.endOfGame = true;
     displayController.changeBtnText();
   }
@@ -245,6 +251,7 @@ const displayController = (function () {
     resetCellValues();
     resetGameValues();
     displayController.changeBtnText();
+    document.getElementById('whose-turn').textContent = "Player's turn";
   }
   function resetCellValues() {
     let cells = Array.from(_gameboardArea.getElementsByClassName('cell'));
