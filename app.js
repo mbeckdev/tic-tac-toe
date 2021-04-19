@@ -6,20 +6,9 @@
 // If you need multiples  of something (players!), create them with factories.
 // https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/tic-tac-toe
 
-//make the gameboard an array
-// const squares = [];
-// for (let i = 0; i < 3; i++) {
-//   squares.push(i);
-//   squares[i] = new Array(3);
-//   for (let j = 0; j < 3; j++) {
-//     squares[i].push(j);
-//   }
-// }
-
 //gameboard = module pattern (only happens once)
 const gameboard = (function () {
   const squares = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-  console.log('made squares');
 
   let gameboardStatus = [];
   function getGameboardStatus() {
@@ -27,8 +16,6 @@ const gameboard = (function () {
     document.querySelectorAll('.cell').forEach((div) => {
       gameboardStatus.push(div.textContent);
     });
-    console.log('gameboardStatus = ' + gameboardStatus);
-    console.log('gameboard.gameboardStatus = ' + gameboard.gameboardStatus);
     gameboard.gameboardStatus = gameboardStatus;
   }
   return { squares, getGameboardStatus, gameboardStatus };
@@ -68,17 +55,12 @@ document
 const gameFlow = (function () {
   let whoseTurn = 'player1';
   let currentMark = 'X'; //will change when whoseturn changes.
-  // let scorePlayer = 0;
-  // let scoreComputer = 0;
   let endOfGame = false;
   let allowPlayAgainBtn = false;
   let checkboxSection = document.getElementById('checkbox-section');
 
   function checkIfTaken(e) {
-    console.log('checking');
-
     let thisDiv = e.target;
-    console.log('thisDiv.textContent = ' + thisDiv.textContent);
 
     if (!gameFlow.endOfGame) {
       if (thisDiv.textContent == '') {
@@ -98,7 +80,6 @@ const gameFlow = (function () {
   isCompCheckbox.addEventListener('click', getCheckboxChecked);
 
   function getCheckboxChecked(e) {
-    console.log(e.target);
     gameFlow.p2IsComputer = e.target['checked'];
   }
 
@@ -109,7 +90,6 @@ const gameFlow = (function () {
       document.getElementById('whose-turn').textContent =
         player2.sayName() + "'s turn";
       gameFlow.currentMark = player2.marker;
-      console.log('currentMark = ' + gameFlow.currentMark);
 
       if (gameFlow.p2IsComputer == true) {
         window.setTimeout(function () {
@@ -154,7 +134,6 @@ const gameFlow = (function () {
 
     for (let i = 0; i < winningIds.length; i++) {
       let lilArray = winningIds[i];
-      console.log(lilArray);
 
       // lilArray[0] //3
       // gameboard.gameboardStatus[lilArray[0]] // ''  or 'X' or 'O'
@@ -169,7 +148,6 @@ const gameFlow = (function () {
         spotC == player1.marker
       ) {
         //yes player has won
-        console.log('Player1 has won!!!!');
         gameFlow.winHappened(player1);
         break;
       }
@@ -181,7 +159,6 @@ const gameFlow = (function () {
         spotC == player2.marker
       ) {
         //yes player2 has won
-        console.log('player2 has won!!!!');
         gameFlow.winHappened(player2);
         break;
       }
@@ -192,18 +169,8 @@ const gameFlow = (function () {
       }
     }
   }
-  // let gameboardStatus = [];
-  // function getGameboardStatus() {
-  //   gameboardStatus = [];
-  //   document.querySelectorAll('.cell').forEach((div) => {
-  //     gameboardStatus.push(div.textContent);
-  //   });
-  // }
 
   function _computerTakesTurn() {
-    // placeMark();
-    // check possible places to put mark
-
     gameboard.getGameboardStatus();
 
     //create an array of spaces left, eg. ['0','2','8']
@@ -224,11 +191,9 @@ const gameFlow = (function () {
     // place mark
 
     displayController.placeMark(chosenId);
-    console.log('end');
   }
 
   function winHappened(whichPlayer) {
-    console.log('win happened to ' + whichPlayer.sayName());
     document.getElementById('whose-turn').textContent =
       whichPlayer.sayName() + ' won!';
 
@@ -237,7 +202,6 @@ const gameFlow = (function () {
     displayController.changeBtnText();
   }
   function tieHappened() {
-    console.log('Tie Game');
     document.getElementById('whose-turn').textContent = 'Tie Game';
     gameFlow.endOfGame = true;
     gameFlow.checkboxSection.classList.remove('hidden');
@@ -246,8 +210,6 @@ const gameFlow = (function () {
   return {
     whoseTurn,
     currentMark,
-    // scorePlayer,
-    // scoreComputer,
     endOfGame,
     allowPlayAgainBtn,
     checkIfTaken,
@@ -264,8 +226,6 @@ const displayController = (function () {
   const _gameboardArea = document.getElementById('gameboard-area');
 
   function drawCells() {
-    console.log('drawing cells');
-
     for (let i = 0; i < 9; i++) {
       const cell = document.createElement('div');
       cell.classList.add('cell');
@@ -278,16 +238,13 @@ const displayController = (function () {
 
   const _startResetBtn = document.getElementById('start-reset-btn');
 
-  function initialStart() {
+  function _initialStart() {
     drawCells();
     _disableCells();
     _startResetBtn.addEventListener('click', resetGame);
-    // document.getElementById('player1').value = 'Happy Penguin';
-    // document.getElementById('player2').value = 'Crafty Raccoon';
-    // player1.updateName1();
-    // player2.updateName2();
   }
-  initialStart();
+
+  _initialStart();
 
   function _disableCells() {
     const cells = document.getElementsByClassName('cell');
@@ -304,6 +261,7 @@ const displayController = (function () {
   }
 
   let _beforeStartClicked = true;
+
   function resetGame() {
     gameFlow.checkboxSection.classList.add('hidden');
     if (_beforeStartClicked) {
@@ -327,14 +285,15 @@ const displayController = (function () {
     document.getElementById('whose-turn').textContent =
       player1.sayName() + "'s turn";
   }
+
   function resetCellValues() {
     let cells = Array.from(_gameboardArea.getElementsByClassName('cell'));
     cells.forEach((cell) => {
       cell.textContent = '';
       cell.style.setProperty('transform', 'initial');
     });
-    console.log(cells);
   }
+
   function resetGameValues() {
     // stuff
     gameFlow.whoseTurn = 'player1';
@@ -344,7 +303,6 @@ const displayController = (function () {
   }
 
   function placeMark(e) {
-    console.log('placing mark');
     let currentMarker = gameFlow.currentMark;
     let thisDiv = '';
     if (gameFlow.whoseTurn == 'player1') {
@@ -364,7 +322,6 @@ const displayController = (function () {
     }
 
     thisDiv.textContent = currentMarker;
-
     thisDiv.style.transform = 'rotate(180deg)';
   }
 
@@ -379,10 +336,3 @@ const displayController = (function () {
 
   return { drawCells, placeMark, changeBtnText };
 })();
-
-// function lol() {
-//   const gameboardArea = document.getElementById('gameboard-area');
-//   const cell = document.createElement('div');
-//   cell.classList.add('cell');
-//   gameboardArea.appendChild(cell);
-// }
