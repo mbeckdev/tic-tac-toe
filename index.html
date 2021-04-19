@@ -15,23 +15,36 @@
     <div id="top-wrapper">
       <h1>Tic-Tac-Toe</h1>
       <form>
-        <div class="form-section">
-          <label for="player1">Enter player 1's name</label>
-          <input
-            id="player1"
-            name="player1"
-            type="text"
-            placeholder="Happy Penguin"
-          />
+        <div id="name-section">
+          <div class="form-section">
+            <label for="player1">Enter player 1's name</label>
+            <input
+              id="player1"
+              name="player1"
+              type="text"
+              placeholder="Happy Penguin"
+            />
+          </div>
+          <div class="form-section">
+            <label for="player2">Enter player 2's name</label>
+            <input
+              id="player2"
+              name="player2"
+              type="text"
+              placeholder="Crafty Raccoon"
+            />
+          </div>
         </div>
-        <div class="form-section">
-          <label for="player2">Enter player 2's name</label>
-          <input
-            id="player2"
-            name="player2"
-            type="text"
-            placeholder="Crafty Raccoon"
-          />
+        <div class="form-section" id="checkbox-section">
+          <label for="is-computer">
+            <input
+              type="checkbox"
+              name="is-computer"
+              id="is-computer"
+              checked="true"
+            />
+            <span>Player 2 is computer</span>
+          </label>
         </div>
       </form>
       <div id="btn-wrapper">

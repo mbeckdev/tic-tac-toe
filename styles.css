@@ -16,6 +16,7 @@ body {
 form {
   display: flex;
   flex-direction: column;
+  margin: 1rem 0 0.5rem 0;
 }
 
 h1 {
@@ -32,8 +33,22 @@ input {
   border-radius: 9px;
 }
 
+input[type='checkbox'] {
+  cursor: pointer;
+  height: 1rem;
+  width: 1rem;
+}
+
 label {
   margin-left: 5px;
+}
+
+label input {
+  color: red;
+  width: 200px;
+  height: 200px;
+  margin-left: 0;
+  margin-right: 5px;
 }
 
 #board-wrapper {
@@ -44,6 +59,11 @@ label {
 #btn-wrapper {
   height: 30px;
   margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+#checkbox-section {
+  flex-direction: row;
 }
 
 #gameboard-area {
@@ -54,6 +74,11 @@ label {
   row-gap: 3px;
   align-items: center;
   justify-items: center;
+}
+
+#name-section {
+  display: flex;
+  flex-direction: column;
 }
 
 #start-reset-btn {
@@ -111,13 +136,24 @@ label {
 }
 
 .hidden {
-  display: none;
+  /* display: none; */
+  visibility: hidden;
 }
 
 @media only screen and (min-width: 430px) {
   input {
     margin-left: 0.5rem;
     margin-top: 0px;
+  }
+
+  #checkbox-section label {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  #is-computer {
+    margin-left: 1rem;
+    margin-top: 3px;
   }
 
   #top-wrapper {
@@ -135,21 +171,31 @@ label {
 
 @media only screen and (min-width: 600px) {
   form {
-    flex-direction: row;
-    margin-top: 2rem;
+    /* display: flex; */
+    flex-direction: column;
+    /* margin-top: 2rem; */
+    /* justify-content: center; */
+    align-items: center;
+    /* border: 1px solid yellow; */
   }
 
   input {
     margin: 0;
     margin-top: 3px;
   }
-
+  #name-section {
+    flex-direction: row;
+    /* margin-top: 2rem; */
+    /* border: 1px solid red; */
+  }
   #whose-turn {
     font-size: xx-large;
   }
 
   .form-section {
+    /* display: flex; */
     flex-direction: column;
-    margin: 20px;
+    margin: 3px 20px;
+    /* border: 1px solid green; */
   }
 }

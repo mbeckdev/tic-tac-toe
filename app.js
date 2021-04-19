@@ -72,6 +72,7 @@ const gameFlow = (function () {
   // let scoreComputer = 0;
   let endOfGame = false;
   let allowPlayAgainBtn = false;
+  let checkboxSection = document.getElementById('checkbox-section');
 
   function checkIfTaken(e) {
     console.log('checking');
@@ -92,6 +93,15 @@ const gameFlow = (function () {
     }
   }
 
+  const isCompCheckbox = document.getElementById('is-computer');
+  let p2IsComputer = true; //initial condition
+  isCompCheckbox.addEventListener('click', getCheckboxChecked);
+
+  function getCheckboxChecked(e) {
+    console.log(e.target);
+    gameFlow.p2IsComputer = e.target['checked'];
+  }
+
   function switchWhoseTurn() {
     if (gameFlow.whoseTurn == 'player1') {
       //after player's turn:
@@ -100,13 +110,18 @@ const gameFlow = (function () {
         player2.sayName() + "'s turn";
       gameFlow.currentMark = player2.marker;
       console.log('currentMark = ' + gameFlow.currentMark);
-      window.setTimeout(function () {
-        _computerTakesTurn();
-        gameFlow.checkGameOver();
-        if (!gameFlow.endOfGame) {
-          switchWhoseTurn(); // should go to the else stuff below
-        }
-      }, 500);
+
+      if (gameFlow.p2IsComputer == true) {
+        window.setTimeout(function () {
+          _computerTakesTurn();
+          gameFlow.checkGameOver();
+          if (!gameFlow.endOfGame) {
+            switchWhoseTurn(); // should go to the else stuff below
+          }
+        }, 500);
+      } else {
+        // you click as player 2
+      }
     } else {
       gameFlow.whoseTurn = 'player1';
       document.getElementById('whose-turn').textContent =
@@ -218,12 +233,14 @@ const gameFlow = (function () {
       whichPlayer.sayName() + ' won!';
 
     gameFlow.endOfGame = true;
+    gameFlow.checkboxSection.classList.remove('hidden');
     displayController.changeBtnText();
   }
   function tieHappened() {
     console.log('Tie Game');
     document.getElementById('whose-turn').textContent = 'Tie Game';
     gameFlow.endOfGame = true;
+    gameFlow.checkboxSection.classList.remove('hidden');
     displayController.changeBtnText();
   }
   return {
@@ -237,6 +254,8 @@ const gameFlow = (function () {
     checkGameOver,
     winHappened,
     tieHappened,
+    p2IsComputer,
+    checkboxSection,
   };
 })();
 
@@ -286,6 +305,7 @@ const displayController = (function () {
 
   let _beforeStartClicked = true;
   function resetGame() {
+    gameFlow.checkboxSection.classList.add('hidden');
     if (_beforeStartClicked) {
       _beforeStartClicked = false; //this only happens once
       _enableCells();
@@ -332,8 +352,15 @@ const displayController = (function () {
       // ^ based on user clicking a certain div
       // e here is a PointerEvent
     } else {
-      thisDiv = document.querySelector(`[data-id=${CSS.escape(e)}]`);
-      // ^ based on some math that determines the number 'e'
+      //player 2
+      //computer is player 2
+      if (gameFlow.p2IsComputer) {
+        thisDiv = document.querySelector(`[data-id=${CSS.escape(e)}]`);
+        // ^ based on some math that determines the number 'e'
+      } else {
+        //human is player 2
+        thisDiv = e.target;
+      }
     }
 
     thisDiv.textContent = currentMarker;
