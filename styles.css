@@ -11,6 +11,10 @@ body {
   /* font-family: 'Zen Dots', cursive; */
 }
 
+button {
+  /* border: none; */
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -27,14 +31,13 @@ input {
 }
 
 #board-wrapper {
-  /* width: 300px; */
   display: flex;
   justify-content: center;
-  /* background-color: red; */
 }
 
 #btn-wrapper {
   height: 30px;
+  margin-top: 1rem;
 }
 
 #gameboard-area {
@@ -45,13 +48,22 @@ input {
   row-gap: 3px;
   align-items: center;
   justify-items: center;
-  /* width: 500px; */
-  /* height: 500px; */
-  /* background-color: blue; */
 }
 
 #start-reset-btn {
-  width: 7rem;
+  background: linear-gradient(hsl(120, 100%, 30%), hsl(120, 100%, 25%));
+  font-family: 'Zen Dots', sans-serif;
+  padding: 3px 30px;
+  border-radius: 50px;
+  font-size: larger;
+}
+
+#start-reset-btn:active {
+  color: white;
+}
+
+#start-reset-btn:hover {
+  background: linear-gradient(hsl(120, 100%, 20%), hsl(120, 100%, 15%));
 }
 
 #top-wrapper {
@@ -66,6 +78,7 @@ input {
   align-items: center;
   font-family: 'Zen Dots', cursive;
   height: 3rem;
+  /* border: 1px solid red; */
 }
 
 .cell {
