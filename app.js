@@ -320,6 +320,7 @@ const displayController = (function () {
     thisDiv.style.transform = 'rotate(180deg)';
   }
 
+  const _beforeStart = true;
   function changeBtnText() {
     if (gameFlow.endOfGame) {
       _startResetBtn.classList.remove('hidden');

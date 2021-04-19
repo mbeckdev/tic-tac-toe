@@ -63,8 +63,9 @@ input {
 #whose-turn {
   display: flex;
   justify-content: center;
-  padding: 10px;
+  align-items: center;
   font-family: 'Zen Dots', cursive;
+  height: 3rem;
 }
 
 .cell {
