@@ -28,6 +28,14 @@ h1 {
 
 input {
   font-family: 'Zen Dots', cursive;
+  margin-top: 3px;
+  background-color: hsl(120, 10%, 80%);
+  padding: 2px 4px;
+  border-radius: 9px;
+}
+
+label {
+  margin-left: 5px;
 }
 
 #board-wrapper {
@@ -101,6 +109,49 @@ input {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.form-section {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0;
+}
+
 .hidden {
   display: none;
+}
+
+@media only screen and (min-width: 430px) {
+  body {
+    /* color: orange; */
+  }
+  input {
+    margin-left: 0.5rem;
+    margin-top: 0px;
+  }
+  #whose-turn {
+    font-size: x-large;
+  }
+  .form-section {
+    flex-direction: row;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  body {
+    /* color: blue; */
+  }
+  form {
+    flex-direction: row;
+    margin-top: 2rem;
+  }
+  input {
+    margin: 0;
+    margin-top: 3px;
+  }
+  #whose-turn {
+    font-size: xx-large;
+  }
+  .form-section {
+    flex-direction: column;
+    margin: 20px;
+  }
 }
