@@ -261,6 +261,7 @@ const displayController = (function () {
 
   function initialStart() {
     drawCells();
+    _disableCells();
     _startResetBtn.addEventListener('click', resetGame);
     // document.getElementById('player1').value = 'Happy Penguin';
     // document.getElementById('player2').value = 'Crafty Raccoon';
@@ -269,7 +270,27 @@ const displayController = (function () {
   }
   initialStart();
 
+  function _disableCells() {
+    const cells = document.getElementsByClassName('cell');
+    Array.from(cells).forEach((cell) => {
+      cell.removeEventListener('click', gameFlow.checkIfTaken);
+    });
+  }
+
+  function _enableCells() {
+    const cells = document.getElementsByClassName('cell');
+    Array.from(cells).forEach((cell) => {
+      cell.addEventListener('click', gameFlow.checkIfTaken);
+    });
+  }
+
+  let _beforeStartClicked = true;
   function resetGame() {
+    if (_beforeStartClicked) {
+      _beforeStartClicked = false; //this only happens once
+      _enableCells();
+    }
+
     if (document.getElementById('player1').value == '') {
       document.getElementById('player1').value = 'Happy Penguin';
       player1.updateName1();
@@ -320,7 +341,6 @@ const displayController = (function () {
     thisDiv.style.transform = 'rotate(180deg)';
   }
 
-  const _beforeStart = true;
   function changeBtnText() {
     if (gameFlow.endOfGame) {
       _startResetBtn.classList.remove('hidden');
